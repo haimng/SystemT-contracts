@@ -1,15 +1,15 @@
-# Remix compiler artifacts
-**/artifacts/
-**/artifacts/**
+node_modules
+.project
+npm-debug.log
+secrets*
+.openzeppelin/unknown-31337.json
+tmp
 
-# Remix plugin state folders
-deps/
-states/
-
-# Debug info
-*.dbg.json
-*.tsbuildinfo
-
-# Optional
+# Hardhat files
+cache
+artifacts
 .env
-.env.local
+coverage
+coverage.json
+typechain
+typechain-types
