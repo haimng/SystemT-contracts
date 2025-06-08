@@ -19,6 +19,10 @@ contract SystemT is Initializable, UUPSUpgradeable, OwnableUpgradeable, Reentran
 
   bool public isTradeActive;
 
+  event Setup(address indexed baseToken, address indexed tradeToken, address indexed router, address quoter, uint24 poolFee);
+  event Trade(address indexed tokenIn, address indexed tokenOut, uint256 amountIn, uint256 amountOut, bool isTradeActive);
+  event SetIsTradeActive(bool isTradeActive);
+
   function initialize() public initializer {
     __UUPSUpgradeable_init();
     __Ownable_init(msg.sender);
@@ -31,6 +35,7 @@ contract SystemT is Initializable, UUPSUpgradeable, OwnableUpgradeable, Reentran
     uniswapRouter = ISwapRouter(_router);
     quoter = IQuoter(_quoter);
     poolFee = _poolFee;
+    emit Setup(_baseToken, _tradeToken, _router, _quoter, _poolFee);
   }
 
   function trade() external onlyOwner nonReentrant {
@@ -57,14 +62,18 @@ contract SystemT is Initializable, UUPSUpgradeable, OwnableUpgradeable, Reentran
       amountOutMinimum: minTokenOut,
       sqrtPriceLimitX96: 0
     });
+    uint256 tokenOutBefore = IERC20(tokenOut).balanceOf(address(this));
     uniswapRouter.exactInputSingle(params);
+    uint256 tokenOutAfter = IERC20(tokenOut).balanceOf(address(this));
     IERC20(tokenIn).approve(address(uniswapRouter), 0);
 
     isTradeActive = !isTradeActive;
+    emit Trade(tokenIn, tokenOut, tokenInAmount, tokenOutAfter - tokenOutBefore, isTradeActive);
   }
 
   function setIsTradeActive(bool _isTradeActive) external onlyOwner {
     isTradeActive = _isTradeActive;
+    emit SetIsTradeActive(_isTradeActive);
   }
 
   function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
