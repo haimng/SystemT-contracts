@@ -15,6 +15,7 @@ export const WETH_UNITS = parseUnits('1', 18);
 
 describe("SystemT", function () {
   let owner: any;
+  let trader: any;
   let other: any;
   let systemT: any;
   let baseToken: any;
@@ -24,7 +25,7 @@ describe("SystemT", function () {
   let poolFee = 500;
 
   before(async function () {
-    [owner, other] = await ethers.getSigners();
+    [owner, trader, other] = await ethers.getSigners();
 
     baseToken = await ethers.getContractAt("IERC20", USDC);
     tradeToken = await ethers.getContractAt("IERC20", WETH);
@@ -117,6 +118,20 @@ describe("SystemT", function () {
     await systemT.setTradingStopped(false);
   });
 
+  it("should only allow owner to set trader", async function () {
+    await expect(systemT.connect(other).setTrader(other.address)).to.be.reverted;
+
+    await systemT.setTrader(trader.address);
+    expect(await systemT.trader()).to.equal(trader.address);
+  });
+
+  it("should allow trader to trade", async function () {
+    await expect(systemT.connect(other).trade()).to.be.revertedWith("Not authorized");
+
+    await ethers.provider.send("evm_increaseTime", [24 * 60 * 60]);
+    await expect(systemT.connect(trader).trade()).to.not.be.reverted;
+  });
+
   it("should revert reentrant call to trade", async function () {
     // Deploy a malicious contract that tries to reenter trade
     const maliciousSource = `
@@ -172,11 +187,17 @@ describe("SystemT", function () {
   });
 
   it("should only allow owner to withdraw baseToken and tradeToken", async function () {
+    // Transfer some USDC to contract for testing
+    await ethers.provider.send("hardhat_impersonateAccount", [USDC_WHALE]);
+    const usdcWhale = await ethers.getSigner(USDC_WHALE);
+    const usdc = await ethers.getContractAt("IERC20", USDC);
+    await usdc.connect(usdcWhale).transfer(systemT.target, USDC_UNITS * 10n);
+
     // Transfer some WETH to contract for testing
     await ethers.provider.send("hardhat_impersonateAccount", [WETH_WHALE]);
-    const whale = await ethers.getSigner(WETH_WHALE);
+    const wethWhale = await ethers.getSigner(WETH_WHALE);
     const weth = await ethers.getContractAt("IERC20", WETH);
-    await weth.connect(whale).transfer(systemT.target, WETH_UNITS * 10n);
+    await weth.connect(wethWhale).transfer(systemT.target, WETH_UNITS * 10n);
 
     // Owner can withdraw baseToken (USDC)
     const ownerBaseBalanceBefore = await baseToken.balanceOf(owner.address);

@@ -19,13 +19,15 @@ contract SystemT is Initializable, UUPSUpgradeable, OwnableUpgradeable, Reentran
 
   bool public isTradeActive;
   uint256 public lastTradeTimestamp;
-
   bool public tradingStopped;
+
+  address public trader;
 
   event Setup(address indexed baseToken, address indexed tradeToken, address indexed router, address quoter, uint24 poolFee);
   event Trade(address indexed tokenIn, address indexed tokenOut, uint256 amountIn, uint256 amountOut, bool isTradeActive);
   event SetIsTradeActive(bool isTradeActive);
   event SetTradingStopped(bool tradingStopped);
+  event SetTrader(address indexed trader);
 
   function initialize() public initializer {
     __UUPSUpgradeable_init();
@@ -42,7 +44,8 @@ contract SystemT is Initializable, UUPSUpgradeable, OwnableUpgradeable, Reentran
     emit Setup(_baseToken, _tradeToken, _router, _quoter, _poolFee);
   }
 
-  function trade() external onlyOwner nonReentrant {
+  function trade() external nonReentrant {
+    require(msg.sender == owner() || msg.sender == trader, "Not authorized");
     require(!tradingStopped, "Trading is stopped");
     require(block.timestamp >= lastTradeTimestamp + 22 hours, "Trade allowed only once per day");
     require(baseToken != address(0) && tradeToken != address(0) && address(uniswapRouter) != address(0) && address(quoter) != address(0), "DEX not set");
@@ -86,6 +89,11 @@ contract SystemT is Initializable, UUPSUpgradeable, OwnableUpgradeable, Reentran
   function setTradingStopped(bool _stopped) external onlyOwner {
     tradingStopped = _stopped;
     emit SetTradingStopped(_stopped);
+  }
+
+  function setTrader(address _trader) external onlyOwner {
+    trader = _trader;
+    emit SetTrader(_trader);
   }
 
   function withdrawToken(address token) external onlyOwner {
