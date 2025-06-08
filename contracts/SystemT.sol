@@ -7,9 +7,10 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 import "@uniswap/v3-periphery/contracts/interfaces/IQuoter.sol";
+import "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol";
 // import "hardhat/console.sol";
 
-contract SystemT is Initializable, UUPSUpgradeable, OwnableUpgradeable {
+contract SystemT is Initializable, UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuardUpgradeable {
   address public baseToken;
   address public tradeToken;
   ISwapRouter public uniswapRouter;
@@ -21,6 +22,7 @@ contract SystemT is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   function initialize() public initializer {
     __UUPSUpgradeable_init();
     __Ownable_init(msg.sender);
+    __ReentrancyGuard_init();
   }
 
   function setup(address _baseToken, address _tradeToken, address _router, address _quoter, uint24 _poolFee) external onlyOwner {
@@ -31,7 +33,7 @@ contract SystemT is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     poolFee = _poolFee;
   }
 
-  function trade() external onlyOwner {
+  function trade() external onlyOwner nonReentrant {
     require(baseToken != address(0) && tradeToken != address(0) && address(uniswapRouter) != address(0) && address(quoter) != address(0), "DEX not set");
 
     address tokenIn = isTradeActive ? tradeToken : baseToken;

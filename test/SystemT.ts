@@ -94,4 +94,58 @@ describe("SystemT", function () {
     expect(await systemT.isTradeActive()).to.equal(false);
   });
 
+  it("should revert reentrant call to trade (nonReentrant)", async function () {
+    // Deploy a malicious contract that tries to reenter trade
+    const maliciousSource = `
+      // SPDX-License-Identifier: MIT
+      pragma solidity ^0.8.0;
+      contract Malicious {
+        address public systemT;
+        constructor(address _systemT) { systemT = _systemT; }
+        function attack() external {
+          (bool success,) = systemT.call(abi.encodeWithSignature("trade()"));
+          require(success, "First trade failed");
+        }
+        fallback() external payable {
+          (bool success,) = systemT.call(abi.encodeWithSignature("trade()"));
+          require(success, "Reentrant trade failed");
+        }
+      }
+    `;
+
+    // Compile the contract
+    const solc = require("solc");
+    const input = {
+      language: "Solidity",
+      sources: {
+        "Malicious.sol": {
+          content: maliciousSource,
+        },
+      },
+      settings: {
+        outputSelection: {
+          "*": {
+            "*": ["abi", "evm.bytecode"],
+          },
+        },
+      },
+    };
+    const output = JSON.parse(solc.compile(JSON.stringify(input)));
+    const contractFile = output.contracts["Malicious.sol"]["Malicious"];
+    const MaliciousFactory = new ethers.ContractFactory(contractFile.abi, contractFile.evm.bytecode.object, owner);
+    const malicious = await MaliciousFactory.deploy(systemT.target);
+    await malicious.waitForDeployment();
+
+    // Create a contract instance with ABI for attack()
+    const maliciousWithAbi = await ethers.getContractAt(
+      [
+        "function attack() external"
+      ],
+      malicious.target
+    );
+
+    // Try to call attack, expecting revert due to nonReentrant
+    await expect(maliciousWithAbi.attack()).to.be.reverted;
+  });
+
 });
