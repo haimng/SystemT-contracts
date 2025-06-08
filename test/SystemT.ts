@@ -100,7 +100,23 @@ describe("SystemT", function () {
     expect(await systemT.isTradeActive()).to.equal(false);
   });
 
-  it("should revert reentrant call to trade (nonReentrant)", async function () {
+  it("should only allow owner to set tradingStopped", async function () {
+    await expect(systemT.connect(other).setTradingStopped(true)).to.be.reverted;
+
+    await systemT.setTradingStopped(true);
+    expect(await systemT.tradingStopped()).to.equal(true);
+
+    await systemT.setTradingStopped(false);
+    expect(await systemT.tradingStopped()).to.equal(false);
+  });
+
+  it("should revert trade when tradingStopped is true", async function () {
+    await systemT.setTradingStopped(true);
+    await expect(systemT.trade()).to.be.revertedWith("Trading is stopped");
+    await systemT.setTradingStopped(false);
+  });
+
+  it("should revert reentrant call to trade", async function () {
     // Deploy a malicious contract that tries to reenter trade
     const maliciousSource = `
       // SPDX-License-Identifier: MIT
