@@ -65,6 +65,9 @@ describe("SystemT", function () {
     expect(baseTokenAfter).to.equal(0);
     expect(tradeTokenAfter).to.be.gt(0);
     expect(await systemT.isTradeActive()).to.equal(true);
+
+    const allowance = await baseToken.allowance(systemT.target, router);
+    expect(allowance).to.equal(0);
   });
 
   it("should sell tradeToken for baseToken and update isTradeActive flag", async function () {
@@ -75,6 +78,9 @@ describe("SystemT", function () {
     expect(baseTokenAfter).to.be.gt(0);
     expect(tradeTokenAfter).to.equal(0);
     expect(await systemT.isTradeActive()).to.equal(false);
+
+    const allowance = await tradeToken.allowance(systemT.target, router);
+    expect(allowance).to.equal(0);
   });
 
   it("should only allow owner to set isTradeActive", async function () {
@@ -87,4 +93,5 @@ describe("SystemT", function () {
     await systemT.setIsTradeActive(false);
     expect(await systemT.isTradeActive()).to.equal(false);
   });
+
 });

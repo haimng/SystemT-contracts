@@ -56,6 +56,7 @@ contract SystemT is Initializable, UUPSUpgradeable, OwnableUpgradeable {
       sqrtPriceLimitX96: 0
     });
     uniswapRouter.exactInputSingle(params);
+    IERC20(tokenIn).approve(address(uniswapRouter), 0);
 
     isTradeActive = !isTradeActive;
   }
