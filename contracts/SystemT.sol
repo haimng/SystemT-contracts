@@ -18,6 +18,7 @@ contract SystemT is Initializable, UUPSUpgradeable, OwnableUpgradeable, Reentran
   uint24 public poolFee;
 
   bool public isTradeActive;
+  uint256 public lastTradeTimestamp;
 
   event Setup(address indexed baseToken, address indexed tradeToken, address indexed router, address quoter, uint24 poolFee);
   event Trade(address indexed tokenIn, address indexed tokenOut, uint256 amountIn, uint256 amountOut, bool isTradeActive);
@@ -39,6 +40,7 @@ contract SystemT is Initializable, UUPSUpgradeable, OwnableUpgradeable, Reentran
   }
 
   function trade() external onlyOwner nonReentrant {
+    require(block.timestamp >= lastTradeTimestamp + 22 hours, "Trade allowed only once per day");
     require(baseToken != address(0) && tradeToken != address(0) && address(uniswapRouter) != address(0) && address(quoter) != address(0), "DEX not set");
 
     address tokenIn = isTradeActive ? tradeToken : baseToken;
@@ -68,6 +70,7 @@ contract SystemT is Initializable, UUPSUpgradeable, OwnableUpgradeable, Reentran
     IERC20(tokenIn).approve(address(uniswapRouter), 0);
 
     isTradeActive = !isTradeActive;
+    lastTradeTimestamp = block.timestamp;
     emit Trade(tokenIn, tokenOut, tokenInAmount, tokenOutAfter - tokenOutBefore, isTradeActive);
   }
 

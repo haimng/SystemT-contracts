@@ -70,7 +70,13 @@ describe("SystemT", function () {
     expect(allowance).to.equal(0);
   });
 
+  it("should only allow one trade per day", async function () {
+    await expect(systemT.trade()).to.be.revertedWith("Trade allowed only once per day");
+  });
+
   it("should sell tradeToken for baseToken and update isTradeActive flag", async function () {
+    await ethers.provider.send("evm_increaseTime", [24 * 60 * 60]);
+
     await systemT.trade();
     const baseTokenAfter = await baseToken.balanceOf(systemT.target);
     const tradeTokenAfter = await tradeToken.balanceOf(systemT.target);
