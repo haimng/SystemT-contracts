@@ -9,6 +9,7 @@ export const SWAP_QUOTER = '0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6';
 export const SWAP_FACTORY = '0x1F98431c8aD98523631AE4a59f267346ea31F984';
 export const SWAP_POOL_WETH_USDC = '0x8ad599c3A0ff1De082011EFDDc58f1908eb6e6D8';
 export const USDC_WHALE = '0x55fe002aeff02f77364de339a1292923a15844b8';
+export const WETH_WHALE = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2';
 export const USDC_UNITS = parseUnits('1', 6);
 export const WETH_UNITS = parseUnits('1', 18);
 
@@ -168,6 +169,49 @@ describe("SystemT", function () {
 
     // Try to call attack, expecting revert due to nonReentrant
     await expect(maliciousWithAbi.attack()).to.be.reverted;
+  });
+
+  it("should only allow owner to withdraw baseToken and tradeToken", async function () {
+    // Transfer some WETH to contract for testing
+    await ethers.provider.send("hardhat_impersonateAccount", [WETH_WHALE]);
+    const whale = await ethers.getSigner(WETH_WHALE);
+    const weth = await ethers.getContractAt("IERC20", WETH);
+    await weth.connect(whale).transfer(systemT.target, WETH_UNITS * 10n);
+
+    // Owner can withdraw baseToken (USDC)
+    const ownerBaseBalanceBefore = await baseToken.balanceOf(owner.address);
+    const contractBaseBalance = await baseToken.balanceOf(systemT.target);
+    await expect(systemT.withdrawToken(baseToken)).to.emit(baseToken, "Transfer");
+    const ownerBaseBalanceAfter = await baseToken.balanceOf(owner.address);
+    const contractBaseBalanceAfter = await baseToken.balanceOf(systemT.target);
+    expect(ownerBaseBalanceAfter - ownerBaseBalanceBefore).to.equal(contractBaseBalance);
+    expect(contractBaseBalanceAfter).to.equal(0);
+
+    // Owner can withdraw tradeToken (WETH)
+    const ownerTradeBalanceBefore = await tradeToken.balanceOf(owner.address);
+    const contractTradeBalance = await tradeToken.balanceOf(systemT.target);
+    await expect(systemT.withdrawToken(tradeToken)).to.emit(tradeToken, "Transfer");
+    const ownerTradeBalanceAfter = await tradeToken.balanceOf(owner.address);
+    const contractTradeBalanceAfter = await tradeToken.balanceOf(systemT.target);
+    expect(ownerTradeBalanceAfter - ownerTradeBalanceBefore).to.equal(contractTradeBalance);
+    expect(contractTradeBalanceAfter).to.equal(0);
+  });
+
+  it("should revert if non-owner tries to withdraw", async function () {
+    await expect(systemT.connect(other).withdrawToken(baseToken)).to.be.reverted;
+  });
+
+  it("should revert if token is not baseToken or tradeToken", async function () {
+    await expect(systemT.withdrawToken(SWAP_FACTORY)).to.be.revertedWith("Invalid token");
+  });
+
+  it("should revert if no balance to withdraw", async function () {
+    // Withdraw all baseToken first
+    const contractBaseBalance = await baseToken.balanceOf(systemT.target);
+    if (contractBaseBalance > 0) {
+      await systemT.withdrawToken(baseToken);
+    }
+    await expect(systemT.withdrawToken(baseToken)).to.be.revertedWith("No balance to withdraw");
   });
 
 });

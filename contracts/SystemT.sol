@@ -88,5 +88,14 @@ contract SystemT is Initializable, UUPSUpgradeable, OwnableUpgradeable, Reentran
     emit SetTradingStopped(_stopped);
   }
 
+  function withdrawToken(address token) external onlyOwner {
+    require(token == baseToken || token == tradeToken, "Invalid token");
+
+    uint256 balance = IERC20(token).balanceOf(address(this));
+    require(balance > 0, "No balance to withdraw");
+
+    IERC20(token).transfer(owner(), balance);
+  }
+
   function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
 }
