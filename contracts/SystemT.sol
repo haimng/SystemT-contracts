@@ -28,6 +28,7 @@ contract SystemT is Initializable, UUPSUpgradeable, OwnableUpgradeable, Reentran
   event SetIsTradeActive(bool isTradeActive);
   event SetTradingStopped(bool tradingStopped);
   event SetTrader(address indexed trader);
+  event WithdrawToken(address indexed token, uint256 amount);
 
   function initialize() public initializer {
     __UUPSUpgradeable_init();
@@ -103,6 +104,7 @@ contract SystemT is Initializable, UUPSUpgradeable, OwnableUpgradeable, Reentran
     require(balance > 0, "No balance to withdraw");
 
     IERC20(token).transfer(owner(), balance);
+    emit WithdrawToken(token, balance);
   }
 
   function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}

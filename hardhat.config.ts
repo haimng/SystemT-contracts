@@ -4,7 +4,7 @@ import "@typechain/hardhat";
 import '@openzeppelin/hardhat-upgrades';
 import { HardhatUserConfig } from "hardhat/config";
 
-const secrets = require('./secrets.json');
+const secrets = require('./secrets_deployer.json');
 const { privateKey, alchemyId, etherscanApiKey } = secrets;
 
 const config: HardhatUserConfig = {
