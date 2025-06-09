@@ -15,7 +15,7 @@ const DEX_CONFIG = {
 }
 
 // npx hardhat run --network arbitrum scripts/deploy_systemt.ts
-// npx hardhat verify --network arbitrum 0x7be86Cb24247fE3F240d5238A10cF759129035fB
+// npx hardhat verify --network arbitrum <Impl-Address>
 async function main() {
   const networkName = "arbitrum";
   const contractIndex = 0;
