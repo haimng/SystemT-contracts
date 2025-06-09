@@ -28,7 +28,6 @@ const config: HardhatUserConfig = {
         blockNumber: 22655661  // 2025-06-07 15:30 PDT
       }
     },
-    // https://arb-mainnet.g.alchemy.com/v2/Bcipbi3wYgtmrR-gkp6Fdc888i3N3ixG
     // sepolia: {
     //   url: `https://eth-sepolia.g.alchemy.com/v2/${alchemyId}`,
     //   accounts: [privateKey]
@@ -37,6 +36,9 @@ const config: HardhatUserConfig = {
       url: `https://arb-mainnet.g.alchemy.com/v2/${alchemyId}`,
       accounts: [privateKey]
     }
+  },
+  etherscan: {
+    apiKey: etherscanApiKey,
   }
 };
 
