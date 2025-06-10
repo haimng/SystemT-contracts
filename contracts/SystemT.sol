@@ -5,6 +5,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol";
 import "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 import "@uniswap/v3-periphery/contracts/interfaces/IQuoter.sol";
 import "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol";
@@ -13,9 +14,10 @@ import "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol
 contract SystemT is Initializable, UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuardUpgradeable {
   address public baseToken;
   address public tradeToken;
+  uint24 public poolFee;
+  IUniswapV3Pool public pool;
   ISwapRouter public uniswapRouter;
   IQuoter public quoter;
-  uint24 public poolFee;
 
   bool public isTradeActive;
   uint256 public lastTradeTimestamp;
@@ -23,7 +25,7 @@ contract SystemT is Initializable, UUPSUpgradeable, OwnableUpgradeable, Reentran
 
   address public trader;
 
-  event Setup(address indexed baseToken, address indexed tradeToken, address indexed router, address quoter, uint24 poolFee);
+  event Setup(address indexed baseToken, address indexed tradeToken, uint24 poolFee, address indexed pool, address router, address quoter);
   event Trade(address indexed tokenIn, address indexed tokenOut, uint256 amountIn, uint256 amountOut, bool isTradeActive);
   event SetIsTradeActive(bool isTradeActive);
   event SetTradingStopped(bool tradingStopped);
@@ -36,13 +38,14 @@ contract SystemT is Initializable, UUPSUpgradeable, OwnableUpgradeable, Reentran
     __ReentrancyGuard_init();
   }
 
-  function setup(address _baseToken, address _tradeToken, address _router, address _quoter, uint24 _poolFee) external onlyOwner {
+  function setup(address _baseToken, address _tradeToken, uint24 _poolFee, address _pool, address _router, address _quoter) external onlyOwner {
     baseToken = _baseToken;
     tradeToken = _tradeToken;
+    poolFee = _poolFee;
+    pool = IUniswapV3Pool(_pool);
     uniswapRouter = ISwapRouter(_router);
     quoter = IQuoter(_quoter);
-    poolFee = _poolFee;
-    emit Setup(_baseToken, _tradeToken, _router, _quoter, _poolFee);
+    emit Setup(_baseToken, _tradeToken, _poolFee, _pool, _router, _quoter);
   }
 
   function trade() external nonReentrant {

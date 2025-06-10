@@ -7,9 +7,10 @@ const DEX_CONFIG = {
     {
       baseToken: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831", // USDC
       tradeToken: "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1", // WETH
+      poolFee: 500, // 0.05%
+      pool: "0xC6962004f452bE9203591991D15f6b388e09E8D0", // Uniswap V3 Pool WETH/USDC
       router: "0xE592427A0AEce92De3Edee1F18E0157C05861564", // Uniswap V3 Router
       quoter: "0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6", // Uniswap V3 Quoter
-      poolFee: 500 // 0.05%
     }
   ]
 }
@@ -25,8 +26,8 @@ async function main() {
   if (networkName !== network.name)  return console.error("Supported networks: ", Object.keys(DEX_CONFIG));
 
   const dexConfig = DEX_CONFIG[networkName];
-  const { baseToken, tradeToken, router, quoter, poolFee } = dexConfig[contractIndex];
-  console.log({ baseToken, tradeToken, router, quoter, poolFee });
+  const { baseToken, tradeToken, poolFee, pool, router, quoter } = dexConfig[contractIndex];
+  console.log({ baseToken, tradeToken, poolFee, pool, router, quoter });
 
   // Deploy SystemT contract
   const SystemT = await ethers.getContractFactory("SystemT");
@@ -35,7 +36,7 @@ async function main() {
   console.log("SystemT deployed to:", await systemT.getAddress());
 
   // Setup SystemT
-  const setupTx = await systemT.setup(baseToken, tradeToken, router, quoter, poolFee);
+  const setupTx = await systemT.setup(baseToken, tradeToken, poolFee, pool, router, quoter);
   await setupTx.wait();
   console.log("SystemT setup completed.");
 
