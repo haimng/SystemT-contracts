@@ -39,6 +39,9 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: etherscanApiKey,
+  },
+  sourcify: {
+    enabled: true
   }
 };
 

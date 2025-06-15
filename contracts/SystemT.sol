@@ -14,16 +14,17 @@ import "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol
 contract SystemT is Initializable, UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuardUpgradeable {
   address public baseToken;
   address public tradeToken;
-  uint24 public poolFee;
-  IUniswapV3Pool public pool;
   ISwapRouter public uniswapRouter;
   IQuoter public quoter;
+  uint24 public poolFee;
 
   bool public isTradeActive;
   uint256 public lastTradeTimestamp;
   bool public tradingStopped;
 
   address public trader;
+
+  IUniswapV3Pool public pool;
 
   event Setup(address indexed baseToken, address indexed tradeToken, uint24 poolFee, address indexed pool, address router, address quoter);
   event Trade(address indexed tokenIn, address indexed tokenOut, uint256 amountIn, uint256 amountOut, bool isTradeActive);

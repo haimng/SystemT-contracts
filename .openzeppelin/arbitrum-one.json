@@ -5,6 +5,11 @@
       "address": "0x9819fCD1Cd48c6468f635F3A1C5FE66dd9b01001",
       "txHash": "0xdfb7dcbaf1f6314bcc1a77a243aed9b60a35d4788451e5549bb1e6d807b60adc",
       "kind": "uups"
+    },
+    {
+      "address": "0xEE71B5f2ca373b35caa555Ff9293bB918Ca8F772",
+      "txHash": "0x03e50d73b037ed6a408c08e74cebd79e03e3d25d4dd4b5a65f7ad78192299a10",
+      "kind": "uups"
     }
   ],
   "impls": {
@@ -152,6 +157,416 @@
           },
           "t_contract(ISwapRouter)1809": {
             "label": "contract ISwapRouter",
+            "numberOfBytes": "20"
+          },
+          "t_uint24": {
+            "label": "uint24",
+            "numberOfBytes": "3"
+          }
+        },
+        "namespaces": {
+          "erc7201:openzeppelin.storage.ReentrancyGuard": [
+            {
+              "contract": "ReentrancyGuardUpgradeable",
+              "label": "_status",
+              "type": "t_uint256",
+              "src": "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol:43",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    },
+    "3d7b61654bff560c256a93680494166677df1f36c1d5f510d364a7f8687f2635": {
+      "address": "0x664E2b9933f1E29e1081f02e4957A9523e29851e",
+      "txHash": "0x9199a4ca4d17e7769e668e73fcc746cb181b5d6c14d1af7d425b838d44936f29",
+      "layout": {
+        "solcVersion": "0.8.28",
+        "storage": [
+          {
+            "label": "baseToken",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "SystemT",
+            "src": "contracts/SystemT.sol:15"
+          },
+          {
+            "label": "tradeToken",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "SystemT",
+            "src": "contracts/SystemT.sol:16"
+          },
+          {
+            "label": "poolFee",
+            "offset": 20,
+            "slot": "1",
+            "type": "t_uint24",
+            "contract": "SystemT",
+            "src": "contracts/SystemT.sol:17"
+          },
+          {
+            "label": "pool",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_contract(IUniswapV3Pool)1660",
+            "contract": "SystemT",
+            "src": "contracts/SystemT.sol:18"
+          },
+          {
+            "label": "uniswapRouter",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_contract(ISwapRouter)2251",
+            "contract": "SystemT",
+            "src": "contracts/SystemT.sol:19"
+          },
+          {
+            "label": "quoter",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_contract(IQuoter)2151",
+            "contract": "SystemT",
+            "src": "contracts/SystemT.sol:20"
+          },
+          {
+            "label": "isTradeActive",
+            "offset": 20,
+            "slot": "4",
+            "type": "t_bool",
+            "contract": "SystemT",
+            "src": "contracts/SystemT.sol:22"
+          },
+          {
+            "label": "lastTradeTimestamp",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_uint256",
+            "contract": "SystemT",
+            "src": "contracts/SystemT.sol:23"
+          },
+          {
+            "label": "tradingStopped",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_bool",
+            "contract": "SystemT",
+            "src": "contracts/SystemT.sol:24"
+          },
+          {
+            "label": "trader",
+            "offset": 1,
+            "slot": "6",
+            "type": "t_address",
+            "contract": "SystemT",
+            "src": "contracts/SystemT.sol:26"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_struct(InitializableStorage)73_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)13_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(ReentrancyGuardStorage)226_storage": {
+            "label": "struct ReentrancyGuardUpgradeable.ReentrancyGuardStorage",
+            "members": [
+              {
+                "label": "_status",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_contract(IQuoter)2151": {
+            "label": "contract IQuoter",
+            "numberOfBytes": "20"
+          },
+          "t_contract(ISwapRouter)2251": {
+            "label": "contract ISwapRouter",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IUniswapV3Pool)1660": {
+            "label": "contract IUniswapV3Pool",
+            "numberOfBytes": "20"
+          },
+          "t_uint24": {
+            "label": "uint24",
+            "numberOfBytes": "3"
+          }
+        },
+        "namespaces": {
+          "erc7201:openzeppelin.storage.ReentrancyGuard": [
+            {
+              "contract": "ReentrancyGuardUpgradeable",
+              "label": "_status",
+              "type": "t_uint256",
+              "src": "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol:43",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    },
+    "d214afd1558ddfee5133ef1871df35bc18a536e870e944fb4e8f36f9055cd0a4": {
+      "address": "0xbDC1C413A61F5D405d9E000AE684b1308912086D",
+      "txHash": "0x2debc25489618e6310fd29ef5e6d5f2c1b14dd5913c9bd433ed2a7561f249cc2",
+      "layout": {
+        "solcVersion": "0.8.28",
+        "storage": [
+          {
+            "label": "baseToken",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "SystemT",
+            "src": "contracts/SystemT.sol:15"
+          },
+          {
+            "label": "tradeToken",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "SystemT",
+            "src": "contracts/SystemT.sol:16"
+          },
+          {
+            "label": "uniswapRouter",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_contract(ISwapRouter)2251",
+            "contract": "SystemT",
+            "src": "contracts/SystemT.sol:17"
+          },
+          {
+            "label": "quoter",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_contract(IQuoter)2151",
+            "contract": "SystemT",
+            "src": "contracts/SystemT.sol:18"
+          },
+          {
+            "label": "poolFee",
+            "offset": 20,
+            "slot": "3",
+            "type": "t_uint24",
+            "contract": "SystemT",
+            "src": "contracts/SystemT.sol:19"
+          },
+          {
+            "label": "isTradeActive",
+            "offset": 23,
+            "slot": "3",
+            "type": "t_bool",
+            "contract": "SystemT",
+            "src": "contracts/SystemT.sol:21"
+          },
+          {
+            "label": "lastTradeTimestamp",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_uint256",
+            "contract": "SystemT",
+            "src": "contracts/SystemT.sol:22"
+          },
+          {
+            "label": "tradingStopped",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_bool",
+            "contract": "SystemT",
+            "src": "contracts/SystemT.sol:23"
+          },
+          {
+            "label": "trader",
+            "offset": 1,
+            "slot": "5",
+            "type": "t_address",
+            "contract": "SystemT",
+            "src": "contracts/SystemT.sol:25"
+          },
+          {
+            "label": "pool",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_contract(IUniswapV3Pool)1660",
+            "contract": "SystemT",
+            "src": "contracts/SystemT.sol:27"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_struct(InitializableStorage)73_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)13_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(ReentrancyGuardStorage)226_storage": {
+            "label": "struct ReentrancyGuardUpgradeable.ReentrancyGuardStorage",
+            "members": [
+              {
+                "label": "_status",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_contract(IQuoter)2151": {
+            "label": "contract IQuoter",
+            "numberOfBytes": "20"
+          },
+          "t_contract(ISwapRouter)2251": {
+            "label": "contract ISwapRouter",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IUniswapV3Pool)1660": {
+            "label": "contract IUniswapV3Pool",
             "numberOfBytes": "20"
           },
           "t_uint24": {

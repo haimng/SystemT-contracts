@@ -4,11 +4,21 @@ const L1_ADDRESS = "0xD30e893D355b18a32BAd5A9FCa395A54acBC1c6F";
 
 const DEX_CONFIG = {
   arbitrum: [
+    // SystemT WETH/USDC ethusd:12971486
     {
       baseToken: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831", // USDC
       tradeToken: "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1", // WETH
       poolFee: 500, // 0.05%
       pool: "0xC6962004f452bE9203591991D15f6b388e09E8D0", // Uniswap V3 Pool WETH/USDC
+      router: "0xE592427A0AEce92De3Edee1F18E0157C05861564", // Uniswap V3 Router
+      quoter: "0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6", // Uniswap V3 Quoter
+    },
+    // SystemT WBTC/USDT btcusd:14016393
+    {
+      baseToken: "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9", // USDT
+      tradeToken: "0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f", // WBTC
+      poolFee: 500, // 0.05%
+      pool: "0x5969EFddE3cF5C0D9a88aE51E47d721096A97203", // Uniswap V3 Pool WBTC/USDT
       router: "0xE592427A0AEce92De3Edee1F18E0157C05861564", // Uniswap V3 Router
       quoter: "0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6", // Uniswap V3 Quoter
     }
@@ -19,7 +29,7 @@ const DEX_CONFIG = {
 // npx hardhat verify --network arbitrum <Impl-Address>
 async function main() {
   const networkName = "arbitrum";
-  const contractIndex = 0;
+  const contractIndex = 1;
 
   const [deployer] = await ethers.getSigners();
   console.log({ network: network.name, deployer: deployer.address });
