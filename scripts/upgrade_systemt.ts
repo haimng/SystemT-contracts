@@ -1,6 +1,6 @@
 import { ethers, upgrades, network } from "hardhat";
 
-const SYSTEMT_PROXY_ADDRESS = "0x9819fCD1Cd48c6468f635F3A1C5FE66dd9b01001";
+const SYSTEMT_PROXY_ADDRESS = "TODO";
 
 // npx hardhat run --network arbitrum scripts/upgrade_systemt.ts
 // npx hardhat verify --network arbitrum <Impl-Address>

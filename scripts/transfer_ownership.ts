@@ -5,7 +5,7 @@ const L1_ADDRESS = "0xD30e893D355b18a32BAd5A9FCa395A54acBC1c6F";
 
 // npx hardhat run --network arbitrum scripts/transfer_ownership.ts
 async function main() {
-  const systemTProxyAddress = "0x9819fCD1Cd48c6468f635F3A1C5FE66dd9b01001";
+  const systemTProxyAddress = "TODO";
   const [deployer] = await ethers.getSigners();
 
   const SystemT = await ethers.getContractFactory("SystemT");

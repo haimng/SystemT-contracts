@@ -29,7 +29,7 @@ const DEX_CONFIG = {
 // npx hardhat verify --network arbitrum <Impl-Address>
 async function main() {
   const networkName = "arbitrum";
-  const contractIndex = 1;
+  const contractIndex = 0;
 
   const [deployer] = await ethers.getSigners();
   console.log({ network: network.name, deployer: deployer.address });
